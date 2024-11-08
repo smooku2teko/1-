@@ -17,13 +17,17 @@ def main(def_args=sys.argv[1:]):
     if args.repository:
         start = args.repository.rfind('/') + 1
         end = args.repository.rfind('.')
-        directory = args.repository[start:end] if start < end else f'repository-{curr_date.strftime("%Y-%m-%d-%H-%M-%S")}'
+        base_directory = args.repository[start:end] if start < end else f'repository-{curr_date.strftime("%Y-%m-%d-%H-%M-%S")}'
     else:
-        directory = f'repository-{curr_date.strftime("%Y-%m-%d-%H-%M-%S")}'
+        base_directory = f'repository-{curr_date.strftime("%Y-%m-%d-%H-%M-%S")}'
 
-    # Upewnij się, że katalog nie jest pusty
-    if not directory:
-        directory = f'repository-{curr_date.strftime("%Y-%m-%d-%H-%M-%S")}'
+    # Upewnij się, że katalog ma unikalną nazwę
+    directory = base_directory
+    counter = 1
+
+    while os.path.exists(directory):
+        directory = f"{base_directory}_{counter}"
+        counter += 1
 
     os.mkdir(directory)
     os.chdir(directory)
